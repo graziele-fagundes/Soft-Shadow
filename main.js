@@ -110,6 +110,11 @@ async function main() {
 
   let settings = ui();
   const fieldOfViewRadians = degToRad(60);
+  let rotate = false
+  document.querySelector("#rotateCamera").addEventListener("change", function() {
+    performance.now();
+    rotate = !rotate;
+  });
 
   const width = 20;  // largura do grid
   const height = 20; // altura do grid
@@ -117,6 +122,7 @@ async function main() {
   const buildings = Array.from({ length: width }, () => Array(height).fill(0));
   const cars = Array.from({ length: width }, () => Array(height).fill(0));
   const directions = [[0, 1], [1, 0], [0, -1], [-1, 0]];
+
     function generateRoads(x, y) {
       roads[x][y] = true; // Marca a célula como visitada
 
@@ -416,7 +422,7 @@ async function main() {
 
         // Atualizar a matriz da luz
         const lightWorldMatrix = m4.lookAt(
-            [settings.posY, posY, settings.posZ],               // posição
+            [settings.posX, settings.posY, settings.posZ],               // posição
             [0, 0, 0],                       // ponto alvo, ajustado para o centro do mundo
             [0, 1, 0]                        // vetor "up", ajustado para o eixo Y
         );
@@ -433,7 +439,7 @@ async function main() {
       -settings.projHeight / 2,  // bottom
       settings.projHeight / 2,  // top
       0.5,                      // near
-      50);                      // far
+      70);                      // far
 
     // draw to the depth texture
     gl.bindFramebuffer(gl.FRAMEBUFFER, depthFramebuffer);
@@ -459,12 +465,12 @@ async function main() {
     const projectionMatrix = m4.perspective(fieldOfViewRadians, aspect, 1, 2000);
 
     // Compute the camera's matrix using look at.
-    const radius = 40;
-      let rotate = document.querySelector("#rotateCamera").checked;
-      let cameraPosition = [0,10,50]
+    const radius = 60;
+    
+   
+    let cameraPosition = [0,10,50]
     if (rotate)
     {
-
       cameraPosition = [
       Math.cos(timestamp / 2000) * radius,
       15,
@@ -474,7 +480,7 @@ async function main() {
     else
     {
      cameraPosition = [
-        0,15,40
+        0,15,60
       ];
     }
     const target = [0, 0, 0];
@@ -483,7 +489,7 @@ async function main() {
 
     drawScene(projectionMatrix, cameraMatrix, textureMatrix, lightWorldMatrix, textureProgramInfo);
 
-    //drawFrustum();
+    drawFrustum();
     function drawFrustum() {
       const viewMatrix = m4.inverse(cameraMatrix);
       gl.useProgram(colorProgramInfo.program);
@@ -504,13 +510,13 @@ async function main() {
   function ui() {
     const settings = {
       posX: 0,
-      posY: 3,
-      posZ: 15,
+      posY: 20,
+      posZ: 30,
       targetX: 7,
       targetY: 0,
       targetZ: 3.5,
-      projWidth: 30,
-      projHeight: 20,
+      projWidth: 50,
+      projHeight: 50,
       fieldOfView: 120,
       bias: -0.01,
     };
