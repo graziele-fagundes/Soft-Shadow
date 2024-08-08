@@ -102,59 +102,146 @@ async function loadOBJ(gl, program, file) {
 }
 
 function loadGround(gl, program, size) {
-  const segments = 100;
-  const radius = size;
 
-  const positions = [];
-  const texcoords = [];
-  const normals = [];
-  const indices = [];
+  const boxVertices = {
+    position: [
+      // Front face
+      -22, -1, 22,
+      22, -1, 22,
+      22, 1, 22,
+      -22, 1, 22,
 
-  // Center vertex
-  positions.push(0, 0, 0);
-  texcoords.push(1,1);
-  normals.push(0, 1, 0);
+      // Back face
+      -22, -1, -22,
+      -22, 1, -22,
+      22, 1, -22,
+      22, -1, -22,
 
-  // Generate vertices along the circle
-  for (let i = 0; i <= segments; i++) {
-    const angle = (i / segments) * Math.PI * 2;
-    const x = Math.cos(angle) * radius;
-    const z = Math.sin(angle) * radius;
+      // Top face
+      -22, 1, -22,
+      -22, 1, 22,
+      22, 1, 22,
+      22, 1, -22,
 
-    positions.push(x, 0, z);
-    texcoords.push((x / (2 * radius)) + 1, (z / (2 * radius)) + 1);
-    normals.push(0, 1, 0);
+      // Bottom face
+      -22, -1, -22,
+      22, -1, -22,
+      22, -1, 22,
+      -22, -1, 22,
 
-    if (i > 0) {
-      indices.push(0, i, i + 1);
-    }
-  }
+      // Right face
+      22, -1, -22,
+      22, 1, -22,
+      22, 1, 22,
+      22, -1, 22,
 
-  // Close the circle
-  indices.push(0, segments, 1);
+      // Left face
+      -22, -1, -22,
+      -22, -1, 22,
+      -22, 1, 22,
+      -22, 1, -22,
+      ],
 
-  const arrays = {
-    position: positions,
-    texcoord: texcoords,
-    normal: normals,
-    indices: indices,
+        normal: [
+      // Front face
+      0, 0, 1,
+      0, 0, 1,
+      0, 0, 1,
+      0, 0, 1,
+
+      // Back face
+      0, 0, -1,
+      0, 0, -1,
+      0, 0, -1,
+      0, 0, -1,
+
+      // Top face
+      0, 1, 0,
+      0, 1, 0,
+      0, 1, 0,
+      0, 1, 0,
+
+      // Bottom face
+      0, -1, 0,
+      0, -1, 0,
+      0, -1, 0,
+      0, -1, 0,
+
+      // Right face
+      1, 0, 0,
+      1, 0, 0,
+      1, 0, 0,
+      1, 0, 0,
+
+      // Left face
+      -1, 0, 0,
+      -1, 0, 0,
+      -1, 0, 0,
+      -1, 0, 0,
+    ],
+    texcoord: [
+      // Front face
+      0, 0,
+      1, 0,
+      1, 1,
+      0, 1,
+
+      // Back face
+      1, 0,
+      1, 1,
+      0, 1,
+      0, 0,
+
+      // Top face
+      0, 1,
+      0, 0,
+      1, 0,
+      1, 1,
+
+      // Bottom face
+      1, 1,
+      0, 1,
+      0, 0,
+      1, 0,
+
+      // Right face
+      1, 0,
+      1, 1,
+      0, 1,
+      0, 0,
+
+      // Left face
+      0, 0,
+      1, 0,
+      1, 1,
+      0, 1,
+    ],
+    indices: [
+      0, 1, 2, 0, 2, 3,    // Front face
+      4, 5, 6, 4, 6, 7,    // Back face
+      8, 9, 10, 8, 10, 11,  // Top face
+      12, 13, 14, 12, 14, 15, // Bottom face
+      16, 17, 18, 16, 18, 19, // Right face
+      20, 21, 22, 20, 22, 23, // Left face
+    ],
   };
+
+  const boxBufferInfo = twgl.createBufferInfoFromArrays(gl, boxVertices);
+  const boxVAO = twgl.createVAOFromBufferInfo(gl, program, boxBufferInfo);
   
-  const groundMaterial = {
+  const boxUniforms = {
     diffuse: [1, 1, 1],
-    diffuseMap: twgl.createTexture(gl, { src: [155,103,60,255]}),
+    diffuseMap: twgl.createTexture(gl, { src: [130, 162, 99, 255] }),
     ambient: [1, 1, 1],
     specular: [1, 1, 1],
     shininess: 100,
     opacity: 1,
+    u_world: m4.translation(0, -1, 0),
   };
 
-  const buffer = twgl.createBufferInfoFromArrays(gl, arrays);
-  const vao = twgl.createVAOFromBufferInfo(gl, program, buffer);
-
   return {
-    bufferInfo: buffer,
-    vao,
-    material: groundMaterial,
+    bufferInfo: boxBufferInfo,
+    vao: boxVAO,
+    uniforms: boxUniforms,
   };
 }

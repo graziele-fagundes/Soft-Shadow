@@ -2,11 +2,88 @@
 <html>
 <head>
     <title>Soft Shadow</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: monospace;
+        }
+        canvas {
+            height: 100vh;
+            width: 100vw;
+        }
+
+        #options {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            padding: 10px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            color: black;
+            border-radius: 5px;
+            font-size: 13px;
+            width: 200px;
+        }
+        #options button {
+            padding: 10px;
+            background: black;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-bottom: 5px;
+            width: 96px;
+        }
+        #options input {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        input {
+            accent-color: black;
+        }
+        #credits {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            padding: 10px;
+            color: black;
+            border-radius: 5px;
+            font-size: 13px;
+        }
+        #credits a {
+            color: black;
+        }
+        #title {
+            position: absolute;
+            top: 0px;
+            left: 10px;
+            padding: 10px;
+            color: black;
+            border-radius: 5px;
+            font-size: 13px;
+        }
+    </style>
 </head>
 <body>
-    <canvas id="canvas" style="height: 90vh; width: 90vw;"></canvas>
-    <br>
-    <input type="checkbox" id="rotateCamera"> Rotate Camera
+    <canvas id="canvas"></canvas>
+    
+    <div id="title">
+        <h2>Soft Shadow</h2>
+    </div>
+    <div id="options">
+        <label for="buildings">Buildings:</label>
+        <input type="range" id="buildings" name="buildings" min="0" max="100" value="70">
+        <br>
+        <button id="Generate">Generate</button>
+        <button id="NewSeed">New Seed</button>
+    </div>
+    
+    <div id="credits">
+        Made with 🖤 by <a href="https://github.com/graziele-fagundes" target="_blank">Graziele</a>
+    </div>
+
     <script src="https://webgl2fundamentals.org/webgl/resources/webgl-lessons-ui.js"></script>
     <script src="https://webgl2fundamentals.org/webgl/resources/twgl-full.min.js"></script>
     <script src="https://webgl2fundamentals.org/webgl/resources/m4.js"></script>
@@ -15,6 +92,7 @@
     <script src="objLoader.js"></script>
     <script src="objParser.js"></script>
     <script src="shaders.js"></script>
+    <script src="utils.js"></script>
     <script src="main.js"></script>
    
 </body>
