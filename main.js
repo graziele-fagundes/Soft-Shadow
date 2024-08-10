@@ -5,15 +5,19 @@ async function main() {
   Math.seedrandom(seed);
 
   let nBuildings = document.getElementById('buildings').value;
+  let seedText = document.getElementById('seed');
+  seedText.innerHTML = "Seed: " + seed;
 
   document.getElementById('NewSeed').addEventListener('click', function() {
     seed = getRandomIntBasedOnTime(0, 1000);
+    seedText.innerHTML = "Seed: " + seed;
     Math.seedrandom(seed);
     generateGrid();
   });
 
   document.getElementById('Generate').addEventListener('click', function() {
     nBuildings = document.getElementById('buildings').value;
+    Math.seedrandom(seed);
     generateGrid();
   });
 

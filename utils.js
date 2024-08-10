@@ -117,13 +117,13 @@ function getRandomIntBasedOnTime(min, max) {
 
 function getSettings() {
     return {
-        posX: 0,
+        posX: -20,
         posY: 20,
         posZ: 30,
         targetX: 7,
         targetY: 0,
         targetZ: 3.5,
-        projWidth: 50,
+        projWidth: 60,
         projHeight: 50,
         fieldOfView: 120,
         bias: -0.01,
