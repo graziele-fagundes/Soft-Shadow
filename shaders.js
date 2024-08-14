@@ -76,6 +76,7 @@ float PCF(vec3 projectedTexcoord) {
         for (int y = -KERNEL_SIZE; y <= KERNEL_SIZE; ++y) {
             vec2 offset = vec2(float(x) * OFFSET, float(y) * OFFSET);
             float projectedDepth = texture(u_projectedTexture, projectedTexcoord.xy + offset).r;
+            
             if (projectedDepth <= currentDepth) {
                 shadow += 0.0;
             } else {
@@ -101,6 +102,7 @@ void main() {
     vec4 diffuseMapColor = texture(diffuseMap, v_texcoord);
     vec3 effectiveDiffuse = diffuse * diffuseMapColor.rgb * v_color.rgb;
     float effectiveOpacity = opacity * diffuseMapColor.a * v_color.a;
+    
     outColor = vec4(
         effectiveDiffuse * light * shadowLight +
         ambient * u_ambientLight +

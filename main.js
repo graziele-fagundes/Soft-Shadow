@@ -3,10 +3,13 @@
 async function main() {
   let seed = getRandomIntBasedOnTime(0, 1000);
   Math.seedrandom(seed);
-
-  let nBuildings = document.getElementById('buildings').value;
   let seedText = document.getElementById('seed');
   seedText.innerHTML = "Seed: " + seed;
+
+  let nBuildings = document.getElementById('buildings').value;
+  let nCars = document.getElementById('cars').value;
+  let time = document.getElementById('time').value;
+  let timeText = document.getElementById('timeText');
 
   document.getElementById('NewSeed').addEventListener('click', function() {
     seed = getRandomIntBasedOnTime(0, 1000);
@@ -17,8 +20,15 @@ async function main() {
 
   document.getElementById('Generate').addEventListener('click', function() {
     nBuildings = document.getElementById('buildings').value;
+    nCars = document.getElementById('cars').value;
+    time = document.getElementById('time').value;
     Math.seedrandom(seed);
     generateGrid();
+  });
+
+  document.getElementById('time').addEventListener('input', function() {
+    let t = document.getElementById('time').value;
+    timeText.innerHTML = (parseInt(t) + 6) + ":00";
   });
 
   const canvas = document.querySelector('#canvas');
@@ -115,8 +125,8 @@ async function main() {
   let settings = getSettings();
   const fieldOfViewRadians = degToRad(60);
 
-  const width = 20;  
-  const height = 20; 
+  const width = 21;  
+  const height = 21; 
   let roads = [];
   let buildings = [];
   let cars = [];
@@ -149,18 +159,25 @@ async function main() {
     // Buildings and Cars Position
     function generateBuildingsCars(x, y, width, height, buildings, cars) {
       let changeBuildings = nBuildings / 100;
+      let changeCars = nCars / 100;
 
       for (let i = 0; i < width; i++) {
         for (let j = 0; j < height; j++) {
-          
-          if (Math.random() < changeBuildings) {
-            buildings[i][j] = getRandomInt(1, 3);
+
+          if (!roads[i][j]) // Se não tiver estrada, pode ter prédio
+          {
+            if (Math.random() < changeBuildings) {
+              buildings[i][j] = getRandomInt(1, 3);
+            }
           }
-          if (Math.random() < 0.3) {
-            if (Math.random() < 0.5)
-              cars[i][j] = 1;
-            else
-              cars[i][j] = 2;
+          else // Se tiver estrada, pode ter carro
+          {
+            if (Math.random() < changeCars) {
+              if (Math.random() < 0.5) // 50% de chance de ter carro modelo 1 ou 2
+                cars[i][j] = 1;
+              else
+                cars[i][j] = 2;
+            }
           }
         }
       }
@@ -191,7 +208,7 @@ async function main() {
     twgl.drawBufferInfo(gl, ground.bufferInfo);
 
     const segmentSize = 2; // Tamanho de cada segmento de estrada
-    const offset = 19
+    const offset = 20; // Offset para centralizar o grid
 
     // ------ Draw the grid ------
     for (let x = 0; x < width; x++) {
@@ -246,7 +263,7 @@ async function main() {
           let buildingModel;
           let buildingType = buildings[x][y];
 
-          let buildingY = -0.1;
+          let buildingY = -0.3;
 
           switch (buildingType) {
             case 1:
@@ -257,7 +274,6 @@ async function main() {
               break;
             case 3:
               buildingModel = building3;
-              buildingY = -0.3;
               break;
             default:
               continue;
@@ -294,8 +310,16 @@ async function main() {
     gl.enable(gl.CULL_FACE);
     gl.enable(gl.DEPTH_TEST);
 
+    let t = parseInt(time);
+    let degrees = (t / 12) * 180;
+    let radiustime = 40;
+
+    let x = 0;
+    let y = Math.sin(degrees * Math.PI / 180) * radiustime + 10;
+    let z = Math.cos(degrees * Math.PI / 180) * radiustime;
+
     const lightWorldMatrix = m4.lookAt(
-      [settings.posX, settings.posY, settings.posZ],
+      [x, y, z],
       [0, 0, 0],
       [0, 1, 0]
     );
@@ -308,13 +332,13 @@ async function main() {
       0.5,                       // near
       70);                       // far
 
-    // Draw to the depth texture
+    // Draw from the light's point of view
     gl.bindFramebuffer(gl.FRAMEBUFFER, depthFramebuffer);
     gl.viewport(0, 0, depthTextureSize, depthTextureSize);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     drawScene(lightProjectionMatrix, lightWorldMatrix, m4.identity(), lightWorldMatrix, colorProgramInfo);
 
-    // Draw scene to the canvas projecting the depth texture into the scene
+    // Draw from the camera's point of view
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     gl.clearColor(250 / 255, 214 / 255, 165 / 255, 1);
@@ -330,18 +354,20 @@ async function main() {
     const projectionMatrix = m4.perspective(fieldOfViewRadians, aspect, 1, 2000);
 
     // Camera
-    const radius = 40;
+    const radius = 38;
     const cameraPosition = [
       Math.cos(timestamp / 2000) * radius,
-      15,
-      Math.sin(timestamp / 2000) * radius
+     17,
+     Math.sin(timestamp / 2000) * radius
     ];
+
+    //const cameraPosition = [0,20,50];
     const target = [0, 0, 0];
     const up = [0, 1, 0];
     const cameraMatrix = m4.lookAt(cameraPosition, target, up);
 
-    // Draw the scene
     drawScene(projectionMatrix, cameraMatrix, textureMatrix, lightWorldMatrix, textureProgramInfo);
+
 
     // Draw the light frustum
     drawFrustum();

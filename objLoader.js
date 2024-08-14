@@ -182,39 +182,39 @@ function loadGround(gl, program, size) {
     texcoord: [
       // Front face
       0, 0,
-      1, 0,
-      1, 1,
-      0, 1,
+      10, 0,
+      10, 1,
+      0, 10,
 
       // Back face
-      1, 0,
-      1, 1,
-      0, 1,
+      10, 0,
+      10, 10,
+      0, 10,
       0, 0,
 
       // Top face
-      0, 1,
+      0, 10,
       0, 0,
-      1, 0,
-      1, 1,
+      10, 0,
+      10, 10,
 
       // Bottom face
-      1, 1,
-      0, 1,
+      10, 10,
+      0, 10,
       0, 0,
-      1, 0,
+      10, 0,
 
       // Right face
-      1, 0,
-      1, 1,
-      0, 1,
+      10, 0,
+      10, 10,
+      0, 10,
       0, 0,
 
       // Left face
       0, 0,
-      1, 0,
-      1, 1,
-      0, 1,
+      10, 0,
+      10, 10,
+      0, 10,
     ],
     indices: [
       0, 1, 2, 0, 2, 3,    // Front face
@@ -231,7 +231,7 @@ function loadGround(gl, program, size) {
   
   const boxUniforms = {
     diffuse: [1, 1, 1],
-    diffuseMap: twgl.createTexture(gl, { src: [130, 162, 99, 255] }),
+    diffuseMap: twgl.createTexture(gl, { src: 'grass.jpg' }),
     ambient: [1, 1, 1],
     specular: [1, 1, 1],
     shininess: 100,

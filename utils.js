@@ -117,8 +117,8 @@ function getRandomIntBasedOnTime(min, max) {
 
 function getSettings() {
     return {
-        posX: -20,
-        posY: 20,
+        posX: 0,
+        posY: 5, 
         posZ: 30,
         targetX: 7,
         targetY: 0,

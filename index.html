@@ -38,7 +38,7 @@
         }
         #options input {
             width: 100%;
-            margin-bottom: 20px;
+            margin-left: 0px!important;
         }
         input {
             accent-color: black;
@@ -82,9 +82,17 @@
         <p id="seed">Seed:</p>
     </div>
     <div id="options">
-        <label for="buildings">Buildings:</label>
-        <input type="range" id="buildings" name="buildings" min="0" max="100" value="70">
+        <label for="time">Time:</label>
         <br>
+        <input type="range" id="time" name="time" min="0" max="12" value="0">
+        <small id="timeText">6:00</small>
+        <br><br>
+        <label for="buildings">Buildings:</label>
+        <input type="range" id="buildings" name="buildings" min="0" max="100" value="50">
+        <br><br>
+        <label for="cars">Cars:</label>
+        <input type="range" id="cars" name="cars" min="0" max="100" value="30">
+        <br><br>
         <button id="Generate">Generate</button>
         <button id="NewSeed">New Seed</button>
     </div>
