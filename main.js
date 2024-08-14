@@ -242,32 +242,39 @@ async function main() {
         }
         else 
         {
-          let u_world = m4.identity();
-
-          let buildingX = (x * 2) - offset;
-          let buildingY = (y * 2) - offset;
-          u_world = m4.translate(u_world, buildingX, -0.1, buildingY);
-
-          let rotation = getRotationForBuilding(x, y, roads);
-          let rotationMatrix = m4.yRotation(rotation);
-          u_world = m4.multiply(u_world, rotationMatrix);
-
+        
           let buildingModel;
           let buildingType = buildings[x][y];
 
+          let buildingY = -0.1;
+
           switch (buildingType) {
             case 1:
-              buildingModel = building;
+              buildingModel = building; 
               break;
             case 2:
               buildingModel = building2;
               break;
             case 3:
               buildingModel = building3;
+              buildingY = -0.3;
               break;
             default:
               continue;
           }
+
+          let u_world = m4.identity();
+
+          let buildingX = (x * 2) - offset;
+          let buildingZ = (y * 2) - offset;
+          u_world = m4.translate(u_world, buildingX, buildingY, buildingZ);
+
+          let rotation = getRotationForBuilding(x, y, roads);
+          let rotationMatrix = m4.yRotation(rotation);
+          u_world = m4.multiply(u_world, rotationMatrix);
+
+          u_world = m4.scale(u_world, 1, 1.5, 1);
+
           for (const { bufferInfo, vao, material } of buildingModel.parts) {
             gl.bindVertexArray(vao);
             twgl.setUniforms(programInfo, {
