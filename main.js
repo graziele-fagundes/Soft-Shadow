@@ -50,18 +50,18 @@ async function main() {
   const colorProgramInfo = twgl.createProgramInfo(gl, [colorVS, colorFS], programOptions);
   twgl.setAttributePrefix("a_");
 
-  const building = await loadOBJ(gl, textureProgramInfo, 'Objects/building.obj');
-  const building2 = await loadOBJ(gl, textureProgramInfo, 'Objects/building2.obj');
-  const building3 = await loadOBJ(gl, textureProgramInfo, 'Objects/building3.obj');
+  const building = await loadOBJ(gl, textureProgramInfo, 'objects/building.obj');
+  const building2 = await loadOBJ(gl, textureProgramInfo, 'objects/building2.obj');
+  const building3 = await loadOBJ(gl, textureProgramInfo, 'objects/building3.obj');
 
-  const road = await loadOBJ(gl, textureProgramInfo, 'Objects/road.obj');
-  const road_corner = await loadOBJ(gl, textureProgramInfo, 'Objects/road_corner.obj');
-  const road_t_split = await loadOBJ(gl, textureProgramInfo, 'Objects/road_t_split.obj');
+  const road = await loadOBJ(gl, textureProgramInfo, 'objects/road.obj');
+  const road_corner = await loadOBJ(gl, textureProgramInfo, 'objects/road_corner.obj');
+  const road_t_split = await loadOBJ(gl, textureProgramInfo, 'objects/road_t_split.obj');
 
-  const car1 = await loadOBJ(gl, textureProgramInfo, 'Objects/car1.obj');
-  const car2 = await loadOBJ(gl, textureProgramInfo, 'Objects/car2.obj');
+  const car1 = await loadOBJ(gl, textureProgramInfo, 'objects/car1.obj');
+  const car2 = await loadOBJ(gl, textureProgramInfo, 'objects/car2.obj');
 
-  const ground = await loadGround(gl, textureProgramInfo, 50);
+  const ground = await loadGround(gl, textureProgramInfo, 22);
 
   const cubeLinesBufferInfo = twgl.createBufferInfoFromArrays(gl, {
     position: [
@@ -125,8 +125,8 @@ async function main() {
   let settings = getSettings();
   const fieldOfViewRadians = degToRad(60);
 
-  const width = 21;  
-  const height = 21; 
+  const width = 22;  
+  const height = 22; 
   let roads = [];
   let buildings = [];
   let cars = [];
@@ -208,7 +208,7 @@ async function main() {
     twgl.drawBufferInfo(gl, ground.bufferInfo);
 
     const segmentSize = 2; // Tamanho de cada segmento de estrada
-    const offset = 20; // Offset para centralizar o grid
+    const offset = 21; // Offset para centralizar o grid
 
     // ------ Draw the grid ------
     for (let x = 0; x < width; x++) {
@@ -361,7 +361,7 @@ async function main() {
      Math.sin(timestamp / 2000) * radius
     ];
 
-    //const cameraPosition = [0,20,50];
+    //const cameraPosition = [-40,20,50];
     const target = [0, 0, 0];
     const up = [0, 1, 0];
     const cameraMatrix = m4.lookAt(cameraPosition, target, up);

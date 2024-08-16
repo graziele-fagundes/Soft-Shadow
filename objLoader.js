@@ -106,40 +106,40 @@ function loadGround(gl, program, size) {
   const boxVertices = {
     position: [
       // Front face
-      -22, -1, 22,
-      22, -1, 22,
-      22, 1, 22,
-      -22, 1, 22,
+      -size, -1, size,
+      size, -1, size,
+      size, 1, size,
+      -size, 1, size,
 
       // Back face
-      -22, -1, -22,
-      -22, 1, -22,
-      22, 1, -22,
-      22, -1, -22,
+      -size, -1, -size,
+      -size, 1, -size,
+      size, 1, -size,
+      size, -1, -size,
 
       // Top face
-      -22, 1, -22,
-      -22, 1, 22,
-      22, 1, 22,
-      22, 1, -22,
+      -size, 1, -size,
+      -size, 1, size,
+      size, 1, size,
+      size, 1, -size,
 
       // Bottom face
-      -22, -1, -22,
-      22, -1, -22,
-      22, -1, 22,
-      -22, -1, 22,
+      -size, -1, -size,
+      size, -1, -size,
+      size, -1, size,
+      -size, -1, size,
 
       // Right face
-      22, -1, -22,
-      22, 1, -22,
-      22, 1, 22,
-      22, -1, 22,
+      size, -1, -size,
+      size, 1, -size,
+      size, 1, size,
+      size, -1, size,
 
       // Left face
-      -22, -1, -22,
-      -22, -1, 22,
-      -22, 1, 22,
-      -22, 1, -22,
+      -size, -1, -size,
+      -size, -1, size,
+      -size, 1, size,
+      -size, 1, -size,
       ],
 
         normal: [
@@ -222,7 +222,7 @@ function loadGround(gl, program, size) {
       8, 9, 10, 8, 10, 11,  // Top face
       12, 13, 14, 12, 14, 15, // Bottom face
       16, 17, 18, 16, 18, 19, // Right face
-      20, 21, 22, 20, 22, 23, // Left face
+      20, 21, size, 20, size, 23, // Left face
     ],
   };
 
