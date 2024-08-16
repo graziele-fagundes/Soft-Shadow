@@ -84,19 +84,19 @@ function getRotationForBuilding(x, y, roads) {
     let hasBottomLeft = x > 0 && y < roads[0].length - 1 && roads[x - 1][y + 1];
 
     if (hasTopLeft) {
-        rotation = 225 * Math.PI / 180;
+        rotation = 180 * Math.PI / 180;
         return rotation;
     }
     if (hasTopRight) {
-        rotation = 135 * Math.PI / 180;
+        rotation = 180 * Math.PI / 180;
         return rotation;
     }
     if (hasBottomRight) {
-        rotation = 45 * Math.PI / 180;
+        rotation = 0;
         return rotation;
     }
     if (hasBottomLeft) {
-        rotation = 315 * Math.PI / 180;
+        rotation = 0;
         return rotation;
     }
 }
@@ -120,12 +120,8 @@ function getSettings() {
         posX: 0,
         posY: 5, 
         posZ: 30,
-        targetX: 7,
-        targetY: 0,
-        targetZ: 3.5,
-        projWidth: 60,
-        projHeight: 50,
-        fieldOfView: 120,
+        projWidth: 70,
+        projHeight: 70,
         bias: -0.01,
     };
 }

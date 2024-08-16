@@ -102,44 +102,44 @@ async function loadOBJ(gl, program, file) {
 }
 
 function loadGround(gl, program, size) {
-
+  let height = 0.2;
   const boxVertices = {
     position: [
       // Front face
-      -size, -1, size,
-      size, -1, size,
-      size, 1, size,
-      -size, 1, size,
+      -size, -height, size,
+      size, -height, size,
+      size, height, size,
+      -size, height, size,
 
       // Back face
-      -size, -1, -size,
-      -size, 1, -size,
-      size, 1, -size,
-      size, -1, -size,
+      -size, -height, -size,
+      -size, height, -size,
+      size, height, -size,
+      size, -height, -size,
 
       // Top face
-      -size, 1, -size,
-      -size, 1, size,
-      size, 1, size,
-      size, 1, -size,
+      -size, height, -size,
+      -size, height, size,
+      size, height, size,
+      size, height, -size,
 
       // Bottom face
-      -size, -1, -size,
-      size, -1, -size,
-      size, -1, size,
-      -size, -1, size,
+      -size, -height, -size,
+      size, -height, -size,
+      size, -height, size,
+      -size, -height, size,
 
       // Right face
-      size, -1, -size,
-      size, 1, -size,
-      size, 1, size,
-      size, -1, size,
+      size, -height, -size,
+      size, height, -size,
+      size, height, size,
+      size, -height, size,
 
       // Left face
-      -size, -1, -size,
-      -size, -1, size,
-      -size, 1, size,
-      -size, 1, -size,
+      -size, -height, -size,
+      -size, -height, size,
+      -size, height, size,
+      -size, height, -size,
       ],
 
         normal: [
@@ -236,7 +236,7 @@ function loadGround(gl, program, size) {
     specular: [1, 1, 1],
     shininess: 100,
     opacity: 1,
-    u_world: m4.translation(0, -1, 0),
+    u_world: m4.translation(0, -0.2, 0),
   };
 
   return {

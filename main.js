@@ -1,7 +1,7 @@
 'use strict';
 
 async function main() {
-  let seed = getRandomIntBasedOnTime(0, 1000);
+  let seed = getRandomIntBasedOnTime(0, 2000);
   Math.seedrandom(seed);
   let seedText = document.getElementById('seed');
   seedText.innerHTML = "Seed: " + seed;
@@ -12,7 +12,7 @@ async function main() {
   let timeText = document.getElementById('timeText');
 
   document.getElementById('NewSeed').addEventListener('click', function() {
-    seed = getRandomIntBasedOnTime(0, 1000);
+    seed = getRandomIntBasedOnTime(0, 2000);
     seedText.innerHTML = "Seed: " + seed;
     Math.seedrandom(seed);
     generateGrid();
@@ -61,7 +61,9 @@ async function main() {
   const car1 = await loadOBJ(gl, textureProgramInfo, 'objects/car1.obj');
   const car2 = await loadOBJ(gl, textureProgramInfo, 'objects/car2.obj');
 
-  const ground = await loadGround(gl, textureProgramInfo, 22);
+  const tree = await loadOBJ(gl, textureProgramInfo, 'objects/tree.obj');
+
+  const ground = loadGround(gl, textureProgramInfo, 22);
 
   const cubeLinesBufferInfo = twgl.createBufferInfoFromArrays(gl, {
     position: [
@@ -130,6 +132,7 @@ async function main() {
   let roads = [];
   let buildings = [];
   let cars = [];
+  let trees = [];
 
   // Grid
   function generateGrid()
@@ -137,7 +140,8 @@ async function main() {
     roads = Array.from({ length: width }, () => Array(height).fill(false));
     buildings = Array.from({ length: width }, () => Array(height).fill(0));
     cars = Array.from({ length: width }, () => Array(height).fill(0));
-
+    trees = Array.from({ length: width }, () => Array(height).fill(false));
+    
     // Roads Position
     function generateRoads(x, y, width, height, grid) {
       const directions = [[0, 1], [1, 0], [0, -1], [-1, 0]];
@@ -157,7 +161,7 @@ async function main() {
     }
     
     // Buildings and Cars Position
-    function generateBuildingsCars(x, y, width, height, buildings, cars) {
+    function generateBuildingsCars(width, height, buildings, cars) {
       let changeBuildings = nBuildings / 100;
       let changeCars = nCars / 100;
 
@@ -183,8 +187,23 @@ async function main() {
       }
     }
 
+    // Trees Position
+    function generateTrees(width, height, trees) {
+      for (let i = 0; i < width; i++) {
+        for (let j = 0; j < height; j++) {
+          if (!roads[i][j] && buildings[i][j] == 0) // Se não tiver estrada e prédio, pode ter árvore
+          {
+            if (Math.random() < 0.4) {
+              trees[i][j] = true;
+            }
+          }
+        }
+      }
+    }
+
     generateRoads(0, 0, width, height, roads);
-    generateBuildingsCars(0, 0, width, height, buildings, cars);
+    generateBuildingsCars(width, height, buildings, cars);
+    generateTrees(width, height, trees);
   }
 
   generateGrid();
@@ -207,10 +226,10 @@ async function main() {
     twgl.setUniforms(programInfo, ground.uniforms);
     twgl.drawBufferInfo(gl, ground.bufferInfo);
 
+    // ------ Draw the grid ------
     const segmentSize = 2; // Tamanho de cada segmento de estrada
     const offset = 21; // Offset para centralizar o grid
 
-    // ------ Draw the grid ------
     for (let x = 0; x < width; x++) {
       for (let y = 0; y < height; y++) {
         if (roads[x][y]) {
@@ -257,9 +276,8 @@ async function main() {
             }
           }
         }
-        else 
+        else if (buildings[x][y] != 0) 
         {
-        
           let buildingModel;
           let buildingType = buildings[x][y];
 
@@ -278,7 +296,7 @@ async function main() {
             default:
               continue;
           }
-
+          
           let u_world = m4.identity();
 
           let buildingX = (x * 2) - offset;
@@ -300,6 +318,26 @@ async function main() {
             twgl.drawBufferInfo(gl, bufferInfo);
           }
         }
+        else if (trees[x][y]) 
+        {
+          let u_world = m4.identity();
+          let treeX = (x * 2) - offset;
+          let treeY = 0;
+          let treeZ = (y * 2) - offset;
+          let scale = 0.22;
+
+          u_world = m4.translate(u_world, treeX, treeY, treeZ);
+          u_world = m4.scale(u_world, scale, scale, scale);
+
+          for (const { bufferInfo, vao, material } of tree.parts) {
+            gl.bindVertexArray(vao);
+            twgl.setUniforms(programInfo, {
+              u_world,
+            }, material);
+
+            twgl.drawBufferInfo(gl, bufferInfo);
+          }
+        }
       }
     }
   }
@@ -311,7 +349,7 @@ async function main() {
     gl.enable(gl.DEPTH_TEST);
 
     let t = parseInt(time);
-    let degrees = (t / 12) * 180;
+    let degrees = (t / 12) * 180 + 1;
     let radiustime = 40;
 
     let x = 0;
@@ -325,12 +363,12 @@ async function main() {
     );
 
     const lightProjectionMatrix = m4.orthographic(
-      -settings.projWidth / 2,   // left
-      settings.projWidth / 2,    // right
-      -settings.projHeight / 2,  // bottom
-      settings.projHeight / 2,   // top
-      0.5,                       // near
-      70);                       // far
+            -settings.projWidth / 2,   // left
+             settings.projWidth / 2,   // right
+            -settings.projHeight / 2,  // bottom
+             settings.projHeight / 2,  // top
+             0.5,                      // near
+             100);                      // far
 
     // Draw from the light's point of view
     gl.bindFramebuffer(gl.FRAMEBUFFER, depthFramebuffer);
