@@ -1,6 +1,7 @@
 # Procedural Generation + Soft-Shadow
 
 This project, developed for my computer graphics course, employs procedural generation to create a 3D city environment using shadow mapping to render shadows. Additionally, percentage-closer filtering (PCF) is used to soften the edges of the shadows and prevent jaggies. 
+You can see the project live in [here](https://graziele-fagundes.github.io/Soft-Shadow/).
 
 # Cloning the Repository
 To clone this repository, execute the following command in your terminal:
