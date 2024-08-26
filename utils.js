@@ -198,3 +198,79 @@ function determineRoadPart(tileType, road_corner, road, road_t_split)
       }
 }
 
+function getSkyColor(time)
+{
+  let r = 0;
+  let g = 0;
+  let b = 0;
+  switch (time)
+    {
+      case "0": // 6:00
+        r = 250;
+        g = 214;
+        b = 165;
+        break;
+      case "1": // 7:00
+        r = 252;
+        g = 229;
+        b = 197;
+        break;
+      case "2": // 8:00
+        r = 197;
+        g = 221;
+        b = 252;
+        break;
+      case "3": // 9:00
+        r = 197;
+        g = 221;
+        b = 252;
+        break;
+      case "4": // 10:00
+        r = 197;
+        g = 221;
+        b = 252;
+        break;
+      case "5": // 11:00
+        r = 197;
+        g = 221;
+        b = 252;
+        break;
+      case "6": // 12:00
+        r = 197;
+        g = 221;
+        b = 252;
+        break;
+      case "7": // 13:00
+        r = 197;
+        g = 221;
+        b = 252;
+        break;
+      case "8": // 14:00 
+        r = 197;
+        g = 221;
+        b = 252;
+        break;
+      case "9": // 15:00
+        r = 197;
+        g = 221;
+        b = 252;
+        break;
+      case "10": // 16:00
+        r = 197;
+        g = 221;
+        b = 252;
+        break;
+      case "11": // 17:00
+        r = 252;
+        g = 229;
+        b = 197;
+        break;
+      case "12": // 18:00
+        r = 250;
+        g = 214;
+        b = 165;
+        break;
+    }
+    return [r, g, b];
+}
+

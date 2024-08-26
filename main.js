@@ -65,56 +65,25 @@ async function main() {
 
   const ground = loadGround(gl, textureProgramInfo, 22);
 
-  const cubeLinesBufferInfo = twgl.createBufferInfoFromArrays(gl, {
-    position: [
-      -1, -1, -1,
-      1, -1, -1,
-      -1, 1, -1,
-      1, 1, -1,
-      -1, -1, 1,
-      1, -1, 1,
-      -1, 1, 1,
-      1, 1, 1,
-    ],
-    indices: [
-      0, 1,
-      1, 3,
-      3, 2,
-      2, 0,
-
-      4, 5,
-      5, 7,
-      7, 6,
-      6, 4,
-
-      0, 4,
-      1, 5,
-      3, 7,
-      2, 6,
-    ],
-  });
-  const cubeLinesVAO = twgl.createVAOFromBufferInfo(gl, colorProgramInfo, cubeLinesBufferInfo);
-
-
   // Create a depth texture and framebuffer for shadow.
   const depthTexture = gl.createTexture();
   const depthTextureSize = 1024;
   gl.bindTexture(gl.TEXTURE_2D, depthTexture);
   gl.texImage2D(
-    gl.TEXTURE_2D,      // target
-    0,                  // mip level
-    gl.DEPTH_COMPONENT32F, // internal format
-    depthTextureSize,   // width
-    depthTextureSize,   // height
-    0,                  // border
-    gl.DEPTH_COMPONENT, // format
-    gl.FLOAT,           // type
-    null);              // data
+    gl.TEXTURE_2D,            // target
+    0,                        // mip level
+    gl.DEPTH_COMPONENT32F,    // internal format
+    depthTextureSize,         // width
+    depthTextureSize,         // height
+    0,                        // border
+    gl.DEPTH_COMPONENT,       // format
+    gl.FLOAT,                 // type
+    null);                    // data
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-
+    
   const depthFramebuffer = gl.createFramebuffer();
   gl.bindFramebuffer(gl.FRAMEBUFFER, depthFramebuffer);
   gl.framebufferTexture2D(
@@ -379,7 +348,9 @@ async function main() {
     // Draw from the camera's point of view
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-    gl.clearColor(250 / 255, 214 / 255, 165 / 255, 1);
+
+    let color = getSkyColor(time)
+    gl.clearColor(color[0] / 255, color[1] / 255, color[2] / 255, 1);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     let textureMatrix = m4.identity();
@@ -405,23 +376,6 @@ async function main() {
     const cameraMatrix = m4.lookAt(cameraPosition, target, up);
 
     drawScene(projectionMatrix, cameraMatrix, textureMatrix, lightWorldMatrix, textureProgramInfo);
-
-
-    // Draw the light frustum
-    drawFrustum();
-    function drawFrustum() {
-      const viewMatrix = m4.inverse(cameraMatrix);
-      gl.useProgram(colorProgramInfo.program);
-      gl.bindVertexArray(cubeLinesVAO);
-      const mat = m4.multiply(lightWorldMatrix, m4.inverse(lightProjectionMatrix));
-      twgl.setUniforms(colorProgramInfo, {
-        u_color: [1, 1, 1, 1],
-        u_view: viewMatrix,
-        u_projection: projectionMatrix,
-        u_world: mat,
-      });
-      twgl.drawBufferInfo(gl, cubeLinesBufferInfo, gl.LINES);
-    }
 
     requestAnimationFrame(render);
   }

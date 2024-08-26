@@ -74,13 +74,14 @@ float PCF(vec3 projectedTexcoord) {
     // Sample the depth value from the shadow map with a PCF kernel
     for (int x = -KERNEL_SIZE; x <= KERNEL_SIZE; ++x) {
         for (int y = -KERNEL_SIZE; y <= KERNEL_SIZE; ++y) {
+
             vec2 offset = vec2(float(x) * OFFSET, float(y) * OFFSET);
             float projectedDepth = texture(u_projectedTexture, projectedTexcoord.xy + offset).r;
             
             if (projectedDepth <= currentDepth) {
-                shadow += 0.0;
+                shadow += 0.0;  // Shadow
             } else {
-                shadow += 1.0;
+                shadow += 1.0;  // Light
             }
             numSamples += 1.0;
         }
@@ -107,7 +108,8 @@ void main() {
         effectiveDiffuse * light * shadowLight +
         ambient * u_ambientLight +
         emissive +
-        specular * pow(max(dot(normal, normalize(v_surfaceToView)), 0.0), shininess),
+        specular * 
+        pow(max(dot(normal, normalize(v_surfaceToView)), 0.0), shininess),
         effectiveOpacity
     );
 }
